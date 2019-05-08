@@ -12,6 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body>
@@ -19,21 +20,25 @@
         <h3>Shopping Site</h3>
         <p>Choose your favourite products</p>
     </div>
-    <!--<button class = "btn btn-primary"><i class = "fas fa-angle-down"></i> Go to Cart<br></button>-->
+    
     <div class = "container">
     <div class = "row" id = "cart-app">
+        <transition enter-active-class="animated bounce" leave-active-class="animated bounce">
+            <a href = "#cart_location"><button class = "btn btn-primary" v-if = "width <= 575" style = "position: fixed; top: 85%; left:40%; z-index: 1; opacity: 0.8;"><i class = "fas fa-angle-down"></i> Go to Cart<br></button></a>
+        </transition>
+
         <div class = "col-sm-7 border p-4 m-2">
             <h3 class = "text-center">
                 Store
             </h3>
-            <div class = "row">
-            <div class = "card col-md-3 m-2" v-for = "product in products">
+            <div class = "row d-flex align-items-xl-center">
+            <div class = "card col-xl-3 col-sm-12 col-md-4 m-2" v-for = "product in products">
                 <img class = "card-img-top" src = "">
                 <div class = "card-body">
                     <h5 class = "card-title row">{{ product.name }}</h5>
-                    <div class = "row align-middle">
-                        <small class = "col-8 col-sm-6">&#8377 {{ product.price }}</small>
-                        <button class = "col-4 col-sm-6 btn btn-primary" v-on:click = "add_to_cart(product.name , product.price)"><i class="fa fa-cart-arrow-down"></i> Cart</button>
+                    <div class = "row">
+                        <small class = "col-xl-6 col-md-12 col-sm-8">&#8377 {{ product.price }}</small>
+                        <button class = "col-xl-6 col-md-12 col-sm-4 btn btn-primary" v-on:click = "add_to_cart(product.name , product.price)"><i class="fa fa-cart-arrow-down"></i> Cart</button>
                     </div>
                 </div>
             </div>
@@ -42,7 +47,7 @@
 
 
         <div class = "col-sm-4 border p-4 m-2">
-            <h3 class = "text-center">Cart</h3>
+            <h3 class = "text-center" name = "cart_location">Cart</h3>
             <h5><kbd>Total Cost:</kbd> &#8377 {{ total_cost }}</h5>
             <ul class = "list-group">
                 
@@ -81,6 +86,7 @@
         new Vue({
             el: '#cart-app',
             data: {
+                width: 0,
                 products:[
                     {name : 'Hamam' , price : 30},
                     {name : 'Rexona' , price : 40},
@@ -99,7 +105,18 @@
                 ],
                 total_cost: 0
             },
+            created() {
+                window.addEventListener('resize', this.handleResize)
+                this.handleResize();
+            },
+            destroyed() {
+                window.removeEventListener('resize', this.handleResize)
+            },
             methods: {
+                handleResize() {
+                    this.width = window.innerWidth;
+                    console.log(this.width)
+                },
                 add_to_cart: function (prod_name , prod_price) {
                     var flag = false;
                     for(var i = 0;i < this.cart.length; i++) {
