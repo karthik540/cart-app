@@ -52,6 +52,7 @@
                     <button v-on:click = "remove_product(product.name)" type="button" class="close" style = "color: red;">&times;</button>
                     <span class = "badge badge-primary badge-pill">{{ product.quantity }}</span>
                 </li>
+                <img src = "Assets/cart-empty.jpg" v-if = "!cart.length">
                 <!--<button-counter prod_name = '{{product.name}}' quantity = '{{product.quantity}}'></button-counter>-->
             </ul>
         </div>
